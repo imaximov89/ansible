@@ -1,0 +1,32 @@
+---
+# tasks file for deploy_flask_app
+- name: Copy Nginx flask-app config
+  ansible.builtin.copy:
+    src: flask_app.conf
+    dest: /etc/nginx/conf.d/flask_app.conf
+  notify: Restart Nginx
+
+- name: Remove sites-enabled from nginx.conf
+  ansible.builtin.lineinfile:
+    path: /etc/nginx/nginx.conf
+    search_string: 'include /etc/nginx/sites-enabled/*'
+    state: absent
+    backup: yes
+  notify: Restart Nginx
+
+- name: Create flask_app directory
+  ansible.builtin.file:
+    path: /opt/flask_app
+    state: directory
+
+- name: Copy docker-compose.yml
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: /opt/flask_app/docker-compose.yml
+  register: docker_compose
+
+- name: Start Flask App Container
+  ansible.builtin.command: docker compose up -d
+  args:
+    chdir: /opt/flask_app
+  when: docker_compose.changed

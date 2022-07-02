@@ -1,0 +1,9 @@
+---
+- name: Deploy Flask App
+  hosts: docker_training
+  become: true
+
+  roles:
+    - install_docker
+    - install_nginx
+    - deploy_flask_app

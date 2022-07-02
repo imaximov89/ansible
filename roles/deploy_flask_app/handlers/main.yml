@@ -1,0 +1,6 @@
+---
+# handlers file for deploy_flask_app
+- name: Restart Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded

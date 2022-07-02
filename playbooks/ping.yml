@@ -1,0 +1,7 @@
+---
+- name: Ping Playbook
+  hosts: aws
+
+  tasks:
+  - name: Ping
+    ping:
